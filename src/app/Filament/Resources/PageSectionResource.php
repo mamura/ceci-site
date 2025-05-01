@@ -10,6 +10,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -120,19 +121,64 @@ class PageSectionResource extends Resource
                 Repeater::make('data.plans')
                     ->label('Planos')
                     ->schema([
-                        TextInput::make('title')->required(),
+                        TextInput::make('title')
+                            ->label('Título do Plano')
+                            ->required(),
+
                         Repeater::make('features')
+                            ->label('Funcionalidades')
                             ->schema([
-                                TextInput::make('feature')->required(),
-                            ])->label('Funcionalidades'),
-                        TextInput::make('button')->label('Texto do botão'),
+                                TextInput::make('feature')
+                                    ->label('Funcionalidade')
+                                    ->required(),
+                            ])
+                            ->minItems(1)
+                            ->reorderable()
+                            ->collapsible(),
+
+                        TextInput::make('button')
+                            ->label('Texto do Botão'),
+
+                        TextInput::make('link')
+                            ->label('Link do Botão')
+                            ->url()
+                            ->nullable(),
+
+                        Forms\Components\Toggle::make('is_featured')
+                            ->label('Plano Recomendado')
+                            ->default(false),
                     ])
-                    ->visible(fn (Forms\Get $get) => $get('type') === 'plans'),
+                    ->visible(fn (Forms\Get $get) => $get('type') === 'plans')
+                    ->reorderable()
+                    ->collapsible()
+                    ->grid(1),
         
+                // APP DOWNLOAD
+                FileUpload::make('data.image')
+                    ->label('Imagem')
+                    ->image()
+                    ->directory('sections')
+                    ->visible(fn (Forms\Get $get) => $get('type') === 'app_download'),
+                
+                TextInput::make('data.title')->label('Título'),
+
                 Textarea::make('data.text')
                     ->label('Texto')
                     ->visible(fn (Forms\Get $get) => in_array($get('type'), ['app_download', 'footer'])),
+
+                TextInput::make('data.button_web')
+                    ->label('Link Web')
+                    ->visible(fn (Forms\Get $get) => $get('type') === 'app_download'),
         
+                TextInput::make('data.button_google')
+                    ->label('Link Google Play')
+                    ->visible(fn (Forms\Get $get) => $get('type') === 'app_download'),
+                    
+                TextInput::make('data.button_apple')
+                    ->label('Link App Store')
+                    ->visible(fn (Forms\Get $get) => $get('type') === 'app_download'),
+        
+
                 Repeater::make('data.functionalities')
                     ->label('Funcionalidades')
                     ->schema([
