@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Page extends Model
 {
@@ -15,8 +17,11 @@ class Page extends Model
         'is_active'
     ];
 
-    public function sections(): HasMany
+    public function sections(): BelongsToMany
     {
-        return $this->hasMany(PageSection::class)->orderBy('sort_order');
+        return $this->belongsToMany(PageSection::class)
+            ->withPivot('order')
+            ->orderBy('order');
     }
+    
 }

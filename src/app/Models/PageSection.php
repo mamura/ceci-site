@@ -3,15 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PageSection extends Model
 {
     protected $fillable = [
-        'page_id',
         'type',
         'title',
         'content',
-        'sort_order'
+        'sort_order',
+        'data'
+    ];
+
+    protected $casts = [
+        'data' => 'array',
     ];
 
     public function page(): BelongsTo

@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('page_sections', function (Blueprint $table) {
+        Schema::create('page_page_section', function (Blueprint $table) {
             $table->id();
-            $table->string('type')->default('html');
-            $table->text('title')->nullable();
-            $table->longText('content')->nullable();
-            $table->integer('sort_order')->default(0);
+            $table->foreignId('page_id')->constrained()->onDelete('cascade');
+            $table->foreignId('page_section_id')->constrained()->onDelete('cascade');
+            $table->integer('order')->default(0);
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('page_sections');
+        Schema::dropIfExists('page_page_section');
     }
 };
