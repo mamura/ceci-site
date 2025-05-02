@@ -18,23 +18,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup PHP
+      - name: Configurar PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
+          extensions: mbstring, bcmath, pdo, pdo_mysql, fileinfo, curl, openssl
+          tools: composer
 
-      - name: Check if composer.json exists
-        id: check_files
-        uses: andstor/file-existence-action@v1
-        with:
-          files: 'composer.json'
+      - name: Instalar dependências
+        run: |
+            cd src
+            composer install --no-dev --optimize-autoloader
 
-      - name: Run composer install if composer.json exists
-        if: steps.check_files.outputs.files_exists == 'true'
-        run: composer validate --no-check-publish && composer install --prefer-dist --no-progress
+      #- name: Check if composer.json exists
+      #  id: check_files
+      #  uses: andstor/file-existence-action@v1
+       # with:
+       #   files: 'composer.json'
+
+      #- name: Run composer install if composer.json exists
+      #  if: steps.check_files.outputs.files_exists == 'true'
+      #  run: composer validate --no-check-publish && composer install --prefer-dist --no-progress
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+        run: zip release.zip ./src/* -r
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
