@@ -68,8 +68,8 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
-      - name: Renomear .env.stage para .env
-        run: mv .env.stage .env
+      - name: Criar .env a partir do Secret
+        run: echo "${{ secrets.ENV_PRODUCTION }}" > .env
 
       - name: Login to Azure
         uses: azure/login@v2
