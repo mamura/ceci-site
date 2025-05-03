@@ -35,6 +35,9 @@ jobs:
             cd src
             zip -r release.zip .
 
+      - name: Renomear .env.production para .env
+        run: mv .env.production .env
+
       - name: Debug artifact creation
         run: |
             cd src
