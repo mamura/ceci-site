@@ -33,13 +33,18 @@ jobs:
       - name: Zip artifact for deployment
         run: |
             cd src
-            zip release.zip ./* -r
+            zip -r release.zip .
+
+      - name: Debug artifact creation
+        run: |
+            cd src
+            ls -la
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: php-app
-          path: release.zip
+          path: src/release.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -59,7 +64,7 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip src/release.zip
-      
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
