@@ -68,6 +68,9 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
+      - name: Renomear .env.production para .env
+        run: mv .env.production .env
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
